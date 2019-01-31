@@ -95,30 +95,7 @@ def make_feature(data,aggs,name):
 agg_df=make_feature(data_feature,aggs,"_tsf")
 df_train = df_train.merge(agg_df,on='sample_file_name',how='left')
 df_test = df_test.merge(agg_df,on='sample_file_name',how='left')
-#########################################################################
 
-
-data_feature_a=data_feature[data_feature["positive_pump"]==1]
-
-def make_feature_a(data,name):
-    aggs = {
-        #"work_time": ["count"],
-        "engine_speed": ["min"],
-        "pump_speed": [ "min"],
-        "pump_pressure": ["min",'mean'],
-        "temperature": ["min",'mean'],
-        "flow": ["min",'mean'],
-        "pressure": ["min",'mean'],
-        "output_current": ["min"], }
-
-    agg_df = data.groupby('sample_file_name').agg(aggs)
-    agg_df.columns = agg_df.columns = ['_'.join(col).strip() + name for col in agg_df.columns.values]
-    agg_df.reset_index(drop=False, inplace=True)
-    return agg_df
-
-agg_df=make_feature_a(data_feature_a,"_tsf_a")
-df_train = df_train.merge(agg_df,on='sample_file_name',how='left')
-df_test = df_test.merge(agg_df,on='sample_file_name',how='left')
 
 df_test["label"]=5
 data=pd.concat([df_train,df_test],axis=0, ignore_index=True)
